@@ -1,4 +1,3 @@
-
 import java.util.Scanner;
 
 /**
@@ -23,32 +22,50 @@ public class Game {
      */
     private void initializeWorld() {
         // Create rooms
-        Room entrance = new Room("The Waiting Platform", "You are in a grand waiting platform with marble floors.");
-        Room library = new Room("Library", "You are in a dusty library filled with old books.");
-        Room kitchen = new Room("Kitchen", "You are in a kitchen. It smells like old food.");
-        Room garden = new Room("Garden", "You are in a beautiful garden with flowers.");
+        Room waitingPlatform = new Room("The Waiting Platform", "You are on a grand waiting platform with marble floors. A gentle mist surrounds you.");
+        Room library = new Room("Memory Library", "You are in a dusty library filled with old books. Each book seems to hold someone's forgotten story.");
+        Room garden = new Room("Quiet Garden", "You are in a peaceful garden with wilting flowers. Time feels different here.");
+        Room kitchen = new Room("Childhood Kitchen", "You are in a warm kitchen. It smells like home-cooked meals from long ago.");
+        Room musicRoom = new Room("Echo Chamber", "You are in a room filled with old instruments. Faint melodies echo in the air.");
+        Room attic = new Room("Forgotten Attic", "You are in a dusty attic full of abandoned belongings. Sunlight filters through a small window.");
 
-        // Connect rooms
-        entrance.setExit("north", library);
-        entrance.setExit("east", kitchen);
-        entrance.setExit("south", garden);
+        // Connect rooms - more interesting layout
+        // Waiting Platform connects to: north (library), south (garden), east (kitchen)
+        waitingPlatform.setExit("north", library);
+        waitingPlatform.setExit("south", garden);
+        waitingPlatform.setExit("east", kitchen);
 
-        library.setExit("south", entrance);
-        kitchen.setExit("west", entrance);
-        garden.setExit("north", entrance);
+        // Library connects to: south (platform), west (music room)
+        library.setExit("south", waitingPlatform);
+        library.setExit("west", musicRoom);
 
-        // Create items
-        Item key = new Item("key", "A rusty old key", false);
-        Item book = new Item("book", "An ancient book", false);
-        Item apple = new Item("apple", "A red apple", true);
+        // Garden connects to: north (platform)
+        garden.setExit("north", waitingPlatform);
 
-        // Place items in rooms
-        entrance.addItem(key);
-        library.addItem(book);
-        kitchen.addItem(apple);
+        // Kitchen connects to: west (platform), north (attic)
+        kitchen.setExit("west", waitingPlatform);
+        kitchen.setExit("north", attic);
+
+        // Music Room connects to: east (library)
+        musicRoom.setExit("east", library);
+
+        // Attic connects to: south (kitchen)
+        attic.setExit("south", kitchen);
+
+        // Create 4 items (player only needs 3)
+        Item locket = new Item("locket", "A silver locket with a faded photograph inside", false);
+        Item letter = new Item("letter", "An old handwritten letter, slightly torn at the edges", false);
+        Item photograph = new Item("photograph", "A black and white photograph of smiling faces", false);
+        Item musicBox = new Item("music-box", "A small music box that plays a familiar tune", true);
+
+        // Place items in different rooms
+        library.addItem(letter);
+        garden.addItem(photograph);
+        musicRoom.addItem(musicBox);
+        attic.addItem(locket);
 
         // Create player
-        player = new Player(entrance);
+        player = new Player(waitingPlatform);
     }
 
     /**
@@ -76,11 +93,10 @@ public class Game {
         System.out.println("=================================\n");
         
         // Game story and premise
-        System.out.println("You are an soul that just passed away from the earth");
-        System.out.println("This is the middleplace from reallife to heaven, we call it the station");
-        System.out.println("all people comes to the station and look for 3 memory items that carries their memories");
-        System.out.println("Memories are ");
-        System.out.println("Your objective is to collect three memory items in order to go to the next step. Good luck\n");
+        System.out.println("You are a soul that just passed away from the earth.");
+        System.out.println("This is the middle place between real life and heaven - we call it the Station.");
+        System.out.println("All people come to the Station and look for 3 memory items that carry their memories.");
+        System.out.println("Your objective is to collect ANY THREE memory items in order to move on. Good luck!\n");
         
         System.out.println("Type 'help' for available commands.\n");
         System.out.println(player.getCurrentRoom().getFullDescription());
@@ -160,18 +176,17 @@ public class Game {
      * Handle take command
      */
     private void takeItem(String itemName) {
-    if (player.takeItem(itemName)) {
-        System.out.println("You picked up the " + itemName + ".");
-
-        if (player.getInventorySize() >= 3) {
-            System.out.println("\n🎉 Congratulations! You have collected all 3 memory items!");
-            System.out.println("Type 'quit' to leave this place and move on to your next step in life, good luck.\n");
+        if (player.takeItem(itemName)) {
+            System.out.println("You picked up the " + itemName + ".");
+            // Check if player has collected 3 items
+            if (player.getInventorySize() >= 3) {
+                System.out.println("\n🎉 Congratulations! You have collected 3 memory items!");
+                System.out.println("Type 'quit' to leave this place and move on to the next step.\n");
+            }
+        } else {
+            System.out.println("There is no " + itemName + " here.");
         }
-
-    } else {
-        System.out.println("There is no " + itemName + " here.");
     }
-}
 
     /**
      * Handle use command
