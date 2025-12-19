@@ -79,6 +79,7 @@ public class Game {
         System.out.println("You are an soul that just passed away from the earth");
         System.out.println("This is the middleplace from reallife to heaven, we call it the station");
         System.out.println("all people comes to the station and look for 3 memory items that carries their memories");
+        System.out.println("Memories are ");
         System.out.println("Your objective is to collect three memory items in order to go to the next step. Good luck\n");
         
         System.out.println("Type 'help' for available commands.\n");
@@ -159,12 +160,18 @@ public class Game {
      * Handle take command
      */
     private void takeItem(String itemName) {
-        if (player.takeItem(itemName)) {
-            System.out.println("You picked up the " + itemName + ".");
-        } else {
-            System.out.println("There is no " + itemName + " here.");
+    if (player.takeItem(itemName)) {
+        System.out.println("You picked up the " + itemName + ".");
+
+        if (player.getInventorySize() >= 3) {
+            System.out.println("\n🎉 Congratulations! You have collected all 3 memory items!");
+            System.out.println("Type 'quit' to leave this place and move on to your next step in life, good luck.\n");
         }
+
+    } else {
+        System.out.println("There is no " + itemName + " here.");
     }
+}
 
     /**
      * Handle use command

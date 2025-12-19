@@ -88,4 +88,13 @@ public class Player {
     public List<Item> getInventory() {
         return new ArrayList<>(inventory);
     }
+
+    /**
+     * accessor of the size of the inventory
+     */
+    public int getInventorySize() {
+    return inventory.size();
+    }
+
 }
+
